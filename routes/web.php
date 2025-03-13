@@ -8,35 +8,45 @@ use App\Http\Controllers\CandidatController;
 use App\Http\Controllers\HistoriqueUploadController;
 use App\Http\Controllers\SuiviParrainageController;
 use Illuminate\Support\Facades\Auth;
-
-Route::prefix('dge')->name('dge.')->group(function() {
-    Route::get('/dashboard', [DgeController::class, 'dashboard'])->name('dashboard');
-    Route::get('/import', [DgeController::class, 'import'])->name('import');
-    Route::post('/import-electeurs', [DgeController::class, 'importStore'])->name('import.store');
-    
-    Route::get('/gestion-periode', [DgeController::class, 'gestionPeriode'])->name('gestion_periode');
-    Route::post('/gestion-periode', [DgeController::class, 'storePeriode'])->name('periode.store');
-    Route::get('/ajout-candidat', [DgeController::class, 'ajoutCandidat'])->name('ajout_candidat');
-    Route::post('/ajout-candidat', [DgeController::class, 'storeCandidat'])->name('candidat.store');
-    Route::get('/statistiques', [DgeController::class, 'statistiques'])->name('statistiques');
-    
+use App\Http\Controllers\AuthController;
 
 
-    Route::post('/valider-electeurs', [DgeController::class, 'validerElecteurs'])->name('valider');
-Route::get('/validation', [DgeController::class, 'validationPage'])->name('validation');
-    
-    // Routes pour le ParrainageController
-    Route::post('/parrainage', [ParrainageController::class, 'store'])->name('parrainage.store');
-    Route::get('/parrainages/{candidatId}', [ParrainageController::class, 'parrainagesCandidat'])->name('parrainages_candidat');
-     // Routes pour les électeurs à problème et historique des uploads
-     //Route::get('/dge/electeurs-erreurs', [DgeController::class, 'electeursErreurs'])->name('electeurs_erreurs');
-     
 
-     Route::get('/electeurs-erreurs', [DgeController::class, 'electeursErreurs'])->name('electeurs_erreurs');
-     Route::get('/historique-upload', [DgeController::class, 'historiqueUpload'])->name('historique_upload');
-     // amodifier en ajoutant id comme suit
-     //Route::get('historique-upload/{id}', [DgeController::class, 'historiqueUpload'])->name('dge.historique_upload');
-    //Route::get('/historique-upload', [DgeController::class, 'historiqueUpload'])->name('historique_upload');
+// Routes d'inscription
+Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register.form');
+Route::post('/register', [AuthController::class, 'register'])->name('register');
+
+// Routes de connexion
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
+
+// Déconnexion
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+// Middleware pour protéger les pages sensibles
+Route::middleware(['auth'])->group(function () {
+    Route::prefix('dge')->name('dge.')->group(function() {
+        Route::get('/dashboard', [DgeController::class, 'dashboard'])->name('dashboard');
+        Route::get('/import', [DgeController::class, 'import'])->name('import');
+        Route::post('/import', [DgeController::class, 'importStore'])->name('import.store');
+        Route::get('/gestion-periode', [DgeController::class, 'gestionPeriode'])->name('gestion_periode');
+        Route::post('/gestion-periode', [DgeController::class, 'storePeriode'])->name('periode.store');
+        Route::get('/ajout-candidat', [DgeController::class, 'ajoutCandidat'])->name('ajout_candidat');
+        Route::post('/ajout-candidat', [DgeController::class, 'storeCandidat'])->name('candidat.store');
+        Route::get('/statistiques', [DgeController::class, 'statistiques'])->name('statistiques');
+        Route::post('/gestion-periode/toggle/{id}', [DgeController::class, 'togglePeriode'])->name('toggle_periode');
+
+
+        Route::post('/valider-electeurs', [DgeController::class, 'validerElecteurs'])->name('validerElecteurs');
+
+        // Routes pour le ParrainageController
+        Route::post('/parrainage', [ParrainageController::class, 'store'])->name('parrainage.store');
+        Route::get('/parrainages/{candidatId}', [ParrainageController::class, 'parrainagesCandidat'])->name('parrainages_candidat');
+        
+        // Routes pour les électeurs à problème et historique des uploads
+        Route::get('/electeurs-erreurs', [DgeController::class, 'electeursErreurs'])->name('electeurs_erreurs');
+        Route::get('/historique-upload', [DgeController::class, 'historiqueUpload'])->name('historique_upload');
+    });
 });
 
 Route::get('/', function () {

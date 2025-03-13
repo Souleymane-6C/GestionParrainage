@@ -1,15 +1,27 @@
-@extends('layouts.app')
+<h3>Statistiques des Candidats</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>Nombre de Parrainages</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach($candidats as $candidat)
+            <tr>
+                <td>{{ $candidat->nom }}</td>
+                <td>{{ $candidat->prenom }}</td>
+                <td>{{ $candidat->parrainages_count }}</td>
+            </tr>
+        @endforeach
+    </tbody>
+</table>
 
-@section('content')
-    <h1>Bienvenue sur le Dashboard de la DGE</h1>
-    <div class="row">
-        <div class="col-md-6">
-            <h3>Statistiques Générales</h3>
-            <!-- Ajouter ici des cartes de statistiques -->
-        </div>
-        <div class="col-md-6">
-            <h3>Période de Parrainage</h3>
-            <!-- Afficher la période de parrainage actuelle et son état -->
-        </div>
-    </div>
-@endsection
+<h3>Période de Parrainage</h3>
+@if($periode)
+    <p>Début : {{ $periode->date_debut }}</p>
+    <p>Fin : {{ $periode->date_fin }}</p>
+@else
+    <p>Aucune période définie.</p>
+@endif
