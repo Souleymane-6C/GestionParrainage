@@ -1,29 +1,36 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
-        <h1>Historique des Uploads</h1>
+    <h1>Historique des Uploads</h1>
+
+    @if($historiqueUploads->isEmpty())
+        <p>Aucun fichier importé.</p>
+    @else
         <table class="table">
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Utilisateur</th>
+                    <th>Nom du Fichier</th>
                     <th>Adresse IP</th>
+                    <th>Date d'Upload</th>
                     <th>Checksum</th>
+                    <th>Statut</th>
                     <th>Électeurs à problèmes</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach($historiqueUploads as $upload)
+                @foreach ($historiqueUploads as $upload)
                     <tr>
                         <td>{{ $upload->id }}</td>
-                        <td>{{ $upload->user_id }}</td>
-                        <td>{{ $upload->ip_address }}</td>
-                        <td>{{ $upload->checksum }}</td>
+                        <td>{{ $upload->nom_fichier ?? 'Inconnu' }}</td>
+                        <td>{{ $upload->ip_address ?? 'Non disponible' }}</td>
+                        <td>{{ $upload->created_at ?? 'Non disponible' }}</td>
+                        <td>{{ $upload->checksum ?? 'Non disponible' }}</td>
+                        <td>{{ $upload->statut ?? 'En attente' }}</td>
                         <td>
                             <ul>
-                                @foreach($upload->electeursErreurs as $erreur)
-                                    <li>{{ $erreur->numero_cin }} - {{ $erreur->probleme }}</li>
+                                @foreach ($upload->electeursErreurs as $erreur)
+                                    <li>{{ $erreur->numero_cin }} - {{ $erreur->nature_erreur }}</li>
                                 @endforeach
                             </ul>
                         </td>
@@ -31,5 +38,5 @@
                 @endforeach
             </tbody>
         </table>
-    </div>
+    @endif
 @endsection

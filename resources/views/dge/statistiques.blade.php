@@ -1,22 +1,27 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1>Statistiques des Parrainages</h1>
+    
+
     <table class="table">
+    <h1>Statistiques des Parrainages</h1>
         <thead>
             <tr>
-                <th>Candidat</th>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Numéro de Carte</th>
+                <th>Date de Naissance</th>
                 <th>Nombre de Parrainages</th>
             </tr>
         </thead>
         <tbody>
-            <!-- Dynamically list candidats and their parrainages -->
-            @foreach($parrainages as $parrainage)
+            @foreach($candidats as $candidat)
                 <tr>
-                    <td>{{ $parrainage->candidat->nom }} {{ $parrainage->candidat->prenom }}</td>
-                    <td>{{ $parrainage->count() }}</td>
+                    <td>{{ $candidat->nom }}</td>
+                    <td>{{ $candidat->prenom }}</td>
+                    <td>{{ $candidat->numero_carte }}</td>
+                    <td>{{ $candidat->date_naissance }}</td>
+                    <td>{{ $candidat->parrainages_count ?? 0 }}</td> <!-- Nombre de parrainages, 0 par défaut -->
                 </tr>
             @endforeach
-        </tbody>
-    </table>
-@endsection
+     

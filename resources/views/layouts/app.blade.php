@@ -39,8 +39,8 @@
                         <a class="nav-link" href="{{ route('dge.statistiques') }}">Statistiques</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('dge.electeurs_erreurs') }}">Électeurs à Problèmes</a></li>
-                   <li class="nav-item">
+                    <a class="nav-link" href="{{ route('dge.electeurs_erreurs') }}">Électeurs à Problèmes</a>
+                    <li class="nav-item">
                     <a class="nav-link" href="{{ route('dge.historique_upload') }}">Historique des Uploads</a></li>
                 </ul>
             </div>

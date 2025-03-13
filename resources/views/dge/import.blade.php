@@ -2,6 +2,16 @@
 
 @section('content')
     <h1>Importer le fichier électoral</h1>
+
+    <!-- Affichage des messages de succès ou d'erreur -->
+    @if(session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
+
+    @if(session('error'))
+        <div class="alert alert-danger">{{ session('error') }}</div>
+    @endif
+
     <form action="{{ route('dge.import.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="mb-3">

@@ -10,20 +10,25 @@ class Parrainage extends Model
     use HasFactory;
 
     protected $fillable = [
-        'electeur_id', 
-        'candidat_id', 
-        'date_parrainage',
+        'electeur_id',
+        'candidat_id',
+        'code_validation',
+        'valide',
     ];
 
-    // Relation avec le modèle Electeur
+    protected $hidden = [
+        'code_validation',
+    ];
+
     public function electeur()
     {
         return $this->belongsTo(Electeur::class);
     }
 
-    // Relation avec le modèle Candidat
+
     public function candidat()
     {
-        return $this->belongsTo(Candidat::class);
+        return $this->belongsTo(Candidat::class, 'candidat_id');
     }
+
 }

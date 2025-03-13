@@ -10,11 +10,10 @@ class CreateHistoriqueUploadsTable extends Migration
     {
         Schema::create('historique_uploads', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained(); // référence à l'utilisateur
-            $table->string('ip_address');
-            $table->string('file_hash'); // Empreinte SHA256 du fichier
+            $table->string('ip_address')->nullable()->default('127.0.0.1');
+            $table->string('file_hash')->nullable()->default(''); // Empreinte SHA256 du fichier
             $table->timestamp('date_upload');
-            $table->enum('status', ['success', 'error']);
+            $table->enum('status', ['success', 'error', 'pending'])->default('pending');
             $table->text('error_message')->nullable(); // Message d'erreur si échec
             $table->timestamps();
         });

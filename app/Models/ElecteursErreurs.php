@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ElecteurErreur extends Model
+class ElecteursErreurs extends Model
 {
     use HasFactory;
 
