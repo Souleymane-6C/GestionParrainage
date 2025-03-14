@@ -70,11 +70,14 @@ public function statistiques()
     return view('dge.statistiques', compact('candidats'));
 }
 
-    public function electeursErreurs()
-    {
-        $electeursErreurs = ElecteursErreurs::all();
-        return view('dge.electeurs_erreurs', compact('electeursErreurs'));
-    }
+public function electeursErreurs()
+{
+    // Récupérer les électeurs à problèmes dans la table `electeurs_erreurs`
+    $electeursErreurs = DB::table('electeurs_erreurs')->get();
+
+    return view('dge.electeurs_erreurs', compact('electeursErreurs'));
+}
+
     
     // 📌 Affichage du formulaire d'importation
     public function import()
@@ -202,6 +205,44 @@ public function statistiques()
         return back()->with('success', 'Tous les électeurs valides ont été transférés.');
     }
     
+
+
+    public function corrigerElecteur(Request $request, $id)
+{
+    $electeurErreur = ElecteursErreurs::findOrFail($id);
+
+    // Récupérer les données corrigées depuis le formulaire
+    $data = $request->validate([
+        'numero_carte_electeur' => 'required|string|max:20',
+        'numero_cni' => 'required|string|max:20',
+        'nom_famille' => 'required|string|max:255',
+        'prenom' => 'required|string|max:255',
+        'date_naissance' => 'required|date',
+        'lieu_naissance' => 'required|string|max:255',
+        'sexe' => 'required|in:H,F',
+        'bureau_vote' => 'required|string|max:100',
+    ]);
+
+    // Insérer l'électeur corrigé dans `electeurs_temp`
+    DB::table('electeurs_temp')->insert([
+        'numero_carte_electeur' => $data['numero_carte_electeur'],
+        'numero_cin' => $data['numero_cni'],
+        'nom_famille' => $data['nom_famille'],
+        'prenom' => $data['prenom'],
+        'date_naissance' => $data['date_naissance'],
+        'lieu_naissance' => $data['lieu_naissance'],
+        'sexe' => $data['sexe'],
+        'bureau_vote' => $data['bureau_vote']
+    ]);
+
+    // Supprimer l'électeur de `electeurs_erreurs`
+    $electeurErreur->delete();
+
+    return back()->with('success', 'Électeur corrigé et ajouté à la table temporaire.');
+}
+
+    
+
 
     // 📌 Gestion de la période de parrainage
     public function gestionPeriode()

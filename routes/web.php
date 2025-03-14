@@ -36,6 +36,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/statistiques', [DgeController::class, 'statistiques'])->name('statistiques');
         Route::post('/gestion-periode/toggle/{id}', [DgeController::class, 'togglePeriode'])->name('toggle_periode');
 
+Route::post('/electeurs-erreurs/correction/{id}', [DgeController::class, 'corrigerElecteur'])->name('electeursErreurs.correction');
+
 
         Route::post('/valider-electeurs', [DgeController::class, 'validerElecteurs'])->name('validerElecteurs');
 
