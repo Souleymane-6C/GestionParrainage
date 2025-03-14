@@ -36,10 +36,12 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/statistiques', [DgeController::class, 'statistiques'])->name('statistiques');
         Route::post('/gestion-periode/toggle/{id}', [DgeController::class, 'togglePeriode'])->name('toggle_periode');
 
-Route::post('/electeurs-erreurs/correction/{id}', [DgeController::class, 'corrigerElecteur'])->name('electeursErreurs.correction');
-
 
         Route::post('/valider-electeurs', [DgeController::class, 'validerElecteurs'])->name('validerElecteurs');
+
+
+        Route::post('/electeurs-erreurs/delete/{id}', [DgeController::class, 'supprimerElecteur'])->name('electeursErreurs.delete');
+        Route::post('/electeurs-erreurs/correction/{id}', [DgeController::class, 'corrigerElecteur'])->name('electeursErreurs.correction');
 
         // Routes pour le ParrainageController
         Route::post('/parrainage', [ParrainageController::class, 'store'])->name('parrainage.store');
@@ -48,6 +50,7 @@ Route::post('/electeurs-erreurs/correction/{id}', [DgeController::class, 'corrig
         // Routes pour les électeurs à problème et historique des uploads
         Route::get('/electeurs-erreurs', [DgeController::class, 'electeursErreurs'])->name('electeurs_erreurs');
         Route::get('/historique-upload', [DgeController::class, 'historiqueUpload'])->name('historique_upload');
+       
     });
 });
 

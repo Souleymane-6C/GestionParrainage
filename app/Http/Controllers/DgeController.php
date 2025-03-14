@@ -72,11 +72,12 @@ public function statistiques()
 
 public function electeursErreurs()
 {
-    // Récupérer les électeurs à problèmes dans la table `electeurs_erreurs`
+    // Récupérer uniquement les électeurs en erreur
     $electeursErreurs = DB::table('electeurs_erreurs')->get();
 
     return view('dge.electeurs_erreurs', compact('electeursErreurs'));
 }
+
 
     
     // 📌 Affichage du formulaire d'importation
@@ -147,7 +148,7 @@ public function electeursErreurs()
         while ($row = fgetcsv($file)) {
             $electeursValidés[] = [
                 'numero_carte_electeur' => $row[0] ?? null,
-                'numero_cin' => $row[1] ?? null,
+                'numero_cni' => $row[1] ?? null,
                 'nom_famille' => $row[2] ?? null,
                 'prenom' => $row[3] ?? null,
                 'date_naissance' => $row[4] ?? null,
@@ -208,40 +209,46 @@ public function electeursErreurs()
 
 
     public function corrigerElecteur(Request $request, $id)
+    {
+        $electeur = ElecteursErreurs::find($id);
+    
+        if (!$electeur) {
+            return back()->with('error', 'Électeur introuvable.');
+        }
+    
+        // Mise à jour des champs corrigés
+        $electeur->numero_carte_electeur = $request->numero_carte_electeur;
+        $electeur->numero_cni = $request->numero_cni;
+        $electeur->nom_famille = $request->nom_famille;
+        $electeur->prenom = $request->prenom;
+        $electeur->date_naissance = $request->date_naissance;
+        $electeur->lieu_naissance = $request->lieu_naissance;
+        $electeur->sexe = $request->sexe;
+        $electeur->bureau_vote = $request->bureau_vote;
+    
+        // Suppression de l'erreur après correction
+        $electeur->save();
+        $electeur->delete(); // Supprime l'entrée des erreurs
+    
+        return back()->with('success', 'Électeur corrigé et ajouté à la base.');
+    }
+    
+
+public function supprimerElecteur($id)
 {
-    $electeurErreur = ElecteursErreurs::findOrFail($id);
+    $electeur = ElecteursErreurs::find($id);
 
-    // Récupérer les données corrigées depuis le formulaire
-    $data = $request->validate([
-        'numero_carte_electeur' => 'required|string|max:20',
-        'numero_cni' => 'required|string|max:20',
-        'nom_famille' => 'required|string|max:255',
-        'prenom' => 'required|string|max:255',
-        'date_naissance' => 'required|date',
-        'lieu_naissance' => 'required|string|max:255',
-        'sexe' => 'required|in:H,F',
-        'bureau_vote' => 'required|string|max:100',
-    ]);
+    if (!$electeur) {
+        return back()->with('error', 'Électeur introuvable.');
+    }
 
-    // Insérer l'électeur corrigé dans `electeurs_temp`
-    DB::table('electeurs_temp')->insert([
-        'numero_carte_electeur' => $data['numero_carte_electeur'],
-        'numero_cin' => $data['numero_cni'],
-        'nom_famille' => $data['nom_famille'],
-        'prenom' => $data['prenom'],
-        'date_naissance' => $data['date_naissance'],
-        'lieu_naissance' => $data['lieu_naissance'],
-        'sexe' => $data['sexe'],
-        'bureau_vote' => $data['bureau_vote']
-    ]);
-
-    // Supprimer l'électeur de `electeurs_erreurs`
-    $electeurErreur->delete();
-
-    return back()->with('success', 'Électeur corrigé et ajouté à la table temporaire.');
+    $electeur->delete();
+    return back()->with('success', 'Électeur supprimé avec succès.');
 }
 
-    
+
+
+
 
 
     // 📌 Gestion de la période de parrainage
