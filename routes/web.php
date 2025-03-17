@@ -13,15 +13,34 @@ use App\Http\Controllers\AuthController;
 
 
 // Routes d'inscription
-Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register.form');
-Route::post('/register', [AuthController::class, 'register'])->name('register');
+//Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register.form');
+//Route::post('/register', [AuthController::class, 'register'])->name('register');
 
 // Routes de connexion
-Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
+//Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+//Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
 
 // Déconnexion
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+//Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+
+
+
+// Vérifiez si une route `/dge/register` existe
+Route::prefix('dge')->group(function () {
+    Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('dge.register.form');
+    Route::post('/register', [AuthController::class, 'register'])->name('dge.register');
+});
+
+// Routes de connexion des utilisateurs
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('user.login.form');
+Route::post('/login', [AuthController::class, 'login'])->name('user.login');
+
+// Déconnexion des utilisateurs
+Route::post('/logout', [AuthController::class, 'logout'])->name('user.logout');
+
+
+
 
 // Middleware pour protéger les pages sensibles
 Route::middleware(['auth'])->group(function () {
@@ -66,47 +85,127 @@ Route::get('/', function () {
 
 
 // ✅ Routes pour la gestion des candidats
-Route::prefix('candidat')->group(function () {
-    Route::get('/', [CandidatController::class, 'accueil'])->name('candidat.accueil');
-    Route::get('/inscription', [CandidatController::class, 'showForm'])->name('candidat.inscription.form');
-    Route::post('/inscription', [CandidatController::class, 'verifierCandidat'])->name('candidat.inscription');
-    Route::post('/inscription/finaliser', [CandidatController::class, 'inscrire'])->name('candidat.inscription.finaliser');
-    Route::get('/liste', [CandidatController::class, 'liste'])->name('candidat.liste');
-    Route::get('/details/{id}', [CandidatController::class, 'details'])->name('candidat.details');
-    Route::get('/renvoyer-code/{id}', [CandidatController::class, 'renvoyerCode'])->name('candidat.renvoyerCode');
-    Route::get('/suivi', [CandidatController::class, 'suivi'])->name('candidat.suivi');
-});
+
+
+
+
+// Formulaire de saisie du numéro de carte du candidat
+Route::get('/candidat/inscription', [CandidatController::class, 'searchForm'])->name('candidat.inscription.form');
+Route::post('/candidat/inscription', [CandidatController::class, 'verifyCandidat'])->name('candidat.inscription.verify');
+
+// Formulaire pour compléter l'inscription du candidat
+Route::get('/candidat/complement/{id}', [CandidatController::class, 'complementForm'])->name('candidat.complement.form');
+Route::post('/candidat/complement/{id}', [CandidatController::class, 'finalizeCandidat'])->name('candidat.complement.finalize');
+
+
+// Connexion des candidats
+Route::get('/candidat/login', [CandidatController::class, 'showLoginForm'])->name('candidat.login.form');
+Route::post('/candidat/login', [CandidatController::class, 'login'])->name('candidat.login');
+
+// Traiter la connexion du candidat
+Route::post('/candidat/authenticate', [CandidatController::class, 'authenticate'])->name('candidat.authenticate');
+
+
+// Déconnexion des candidats
+Route::post('/candidat/logout', [CandidatController::class, 'logout'])->name('candidat.logout');
+
+// Liste et détails des candidats
+Route::get('/candidats', [CandidatController::class, 'liste'])->name('candidat.liste');
+Route::get('/candidat/details/{id}', [CandidatController::class, 'details'])->name('candidat.details');
+
+
+// Page de demande et saisie du code
+Route::get('/candidat/details/code/{id}', [CandidatController::class, 'showCodeVerificationPage'])->name('candidat.details.code');
+Route::post('/candidat/details/code', [CandidatController::class, 'verifyCodeForDetails'])->name('candidat.details.verify'); //yavait details.verify
+
+// Génération d'un nouveau code d'authentification pour les candidats
+Route::post('/candidat/generer-code/{id}', [CandidatController::class, 'genererNouveauCode'])->name('candidat.generer_code');
+
+// Suivi des parrainages d’un candidat
+Route::get('/candidat/suivi', [CandidatController::class, 'suivi'])->name('candidat.suivi');
+Route::get('/candidat/accueil', [CandidatController::class, 'accueil'])->name('candidat.accueil');
+
+
+// Page de vérification
+Route::get('/candidat/verification/{id}', [CandidatController::class, 'verificationCode'])->name('candidat.verification');
+
+
+
+// Validation du code et accès aux détails
+Route::post('/candidat/valider-code/{id}', [CandidatController::class, 'validerCodeCandidat'])->name('candidat.valider_code');
+
+Route::get('/candidat/verification/{id}', [CandidatController::class, 'verificationCode'])->name('candidat.verification_code');
+
+
+
+
+
+
+// ROUTES POUR ELECTEURS
+
+// Formulaire d'inscription des électeurs
+//Route::get('/electeur/inscription', [ElecteurController::class, 'showRegisterForm'])->name('electeur.inscription.form');
+//Route::post('/electeur/inscription', [ElecteurController::class, 'register'])->name('electeur.inscription');
+
+// Connexion des électeurs
+//Route::get('/electeur/login', [ElecteurController::class, 'showLoginForm'])->name('electeur.login.form');
+//Route::post('/electeur/login', [ElecteurController::class, 'login'])->name('electeur.login');
+
+// Déconnexion des électeurs
+//Route::post('/electeur/logout', [ElecteurController::class, 'logout'])->name('electeur.logout');
+
+// Tableau de bord des électeurs
+//Route::get('/electeur/dashboard', [ElecteurController::class, 'dashboard'])->name('electeur.dashboard');
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // ✅ Routes pour le suivi des parrainages
-Route::prefix('suivi-parrainages')->group(function () {
-    Route::get('/{candidat_id}', [SuiviParrainageController::class, 'index'])->name('suivi.parrainages'); // Suivi des parrainages d'un candidat
-    Route::post('/connexion', [SuiviParrainageController::class, 'connexion'])->name('suivi.connexion'); // Connexion via code d'authentification
-});
+// Consultation du suivi des parrainages d'un candidat
+Route::get('/suivi-parrainages/{candidat_id}', [CandidatController::class, 'index'])->name('suivi.parrainages');
+
+// Connexion pour accéder au suivi des parrainages
+Route::post('/suivi-parrainages/connexion', [SuiviParrainageController::class, 'connexion'])->name('suivi.connexion');
 
 
+//ROUTES POUR PROCESSUS PARRAINAGE
 
 
-Route::prefix('candidats')->group(function () {
-    Route::get('/', [CandidatController::class, 'index'])->name('candidats.index');
-    Route::get('/create', [CandidatController::class, 'create'])->name('candidats.create');
-    Route::post('/', [CandidatController::class, 'store'])->name('candidats.store');
-    Route::get('/{id}', [CandidatController::class, 'show'])->name('candidats.show');
-    Route::post('/{id}/generer-code', [CandidatController::class, 'genererCode'])->name('candidats.generer_code');
-});
+// Affichage des candidats pour le parrainage
+Route::get('/parrainage', [ParrainageController::class, 'choisirCandidat'])->name('parrainage.choisir');
 
+// Enregistrement du parrainage
+Route::post('/parrainage/enregistrer', [ParrainageController::class, 'enregistrerParrainage'])->name('parrainage.enregistrer');
+
+// Formulaire de validation du parrainage
+Route::get('/parrainage/validation', [ParrainageController::class, 'showValidation'])->name('parrainage.valider');
+
+// Validation du parrainage après réception du code de validation
+Route::post('/parrainage/validation', [ParrainageController::class, 'validerParrainage'])->name('parrainage.validation');
 
 
 
 
 
 // GROUPE DES ROUTES POUR LES ÉLECTEURS
-Route::prefix('electeur')->name('electeur.')->group(function () {
+ Route::prefix('electeur')->name('electeur.')->group(function () {
     // Page d'inscription
-    Route::get('/inscription', [ElecteurController::class, 'create'])->name('inscription');
-    Route::post('/store', [ElecteurController::class, 'store'])->name('store');
+    Route::get('/inscription', [ElecteurController::class, 'showRegisterForm'])->name('inscription');
+
+    Route::post('/inscription', [ElecteurController::class, 'register'])->name('inscription');
 
     // Page de connexion
-    Route::get('/login', [ElecteurController::class, 'showLogin'])->name('login');
+    Route::get('/login', [ElecteurController::class, 'login'])->name('login');
     Route::post('/authenticate', [ElecteurController::class, 'authenticate'])->name('authenticate');
 
     // Routes protégées (nécessitent d'être connecté)
@@ -120,6 +219,16 @@ Route::prefix('electeur')->name('electeur.')->group(function () {
 
         // Déconnexion
         Route::post('/logout', [ElecteurController::class, 'logout'])->name('logout');
+    
+        Route::post('/verifier', [ElecteurController::class, 'verifierInformations'])->name('verifier_informations');
+
+      
+        Route::post('/envoyer-code/{id}', [ElecteurController::class, 'sendSms'])->name('envoyer_code');
+        Route::get('/verification/{id}', [ElecteurController::class, 'showVerificationPage'])->name('verification');
+        Route::post('/valider-code/{id}', [ElecteurController::class, 'validerCodeElecteur'])->name('valider_code');
+    
+    
+    
     });
 });
 Route::get('/suivi-parrainages/{id}', [SuiviParrainageController::class, 'index'])->name('suivi.parrainages');
@@ -136,12 +245,15 @@ Route::middleware(['auth:electeur'])->group(function () {
 
     // Valider un parrainage avec le code reçu
     Route::post('/parrainage/valider', [ParrainageController::class, 'validerParrainage'])->name('parrainage.valider.post');
+
+   
+
 });
 
 
 Route::middleware(['auth.electeur'])->group(function () {
     Route::get('/electeur/dashboard', [ElecteurController::class, 'dashboard'])->name('electeur.dashboard');
-});
+}); 
 
 
 

@@ -24,7 +24,7 @@
                     @foreach($electeursTemp as $electeur)
                         <tr>
                             <td>{{ $electeur->numero_carte_electeur }}</td>
-                            <td>{{ $electeur->numero_cin }}</td>
+                            <td>{{ $electeur->numero_cni }}</td>
                             <td>{{ $electeur->nom_famille }}</td>
                             <td>{{ $electeur->prenom }}</td>
                             <td>{{ $electeur->date_naissance }}</td>

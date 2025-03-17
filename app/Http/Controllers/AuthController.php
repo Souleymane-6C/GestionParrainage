@@ -5,7 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Mail;
 use App\Models\User;
+use App\Models\Candidat;
+use App\Models\Electeur;
+use App\Models\ElecteursValides;
+use App\Models\CodeSecurite;
+use App\Mail\CodeSecuriteMail;
 
 class AuthController extends Controller
 {
@@ -24,14 +31,14 @@ class AuthController extends Controller
             'password' => 'required|string|min:6|confirmed',
         ]);
 
+        // Création de l'utilisateur dans la base de données
         User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
 
-        // Redirection vers la page de connexion avec un message de succès
-        return redirect()->route('login')->with('success', 'Inscription réussie ! Connectez-vous maintenant.');
+        return redirect()->route('user.login.form')->with('success', 'Inscription réussie ! Connectez-vous maintenant.');
     }
 
     // Affiche le formulaire de connexion
@@ -55,10 +62,10 @@ class AuthController extends Controller
         return back()->withErrors(['email' => 'Email ou mot de passe incorrect']);
     }
 
-    // Déconnexion de l'utilisateur
-    public function logout()
-    {
-        Auth::logout();
-        return redirect()->route('login');
-    }
+// 🔹 Déconnexion des utilisateurs
+public function logout()
+{
+    Auth::logout();
+    return redirect()->route('user.login.form');
+}
 }

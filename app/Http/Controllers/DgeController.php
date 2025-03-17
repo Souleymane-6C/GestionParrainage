@@ -209,30 +209,45 @@ public function electeursErreurs()
 
 
     public function corrigerElecteur(Request $request, $id)
-    {
-        $electeur = ElecteursErreurs::find($id);
-    
-        if (!$electeur) {
-            return back()->with('error', 'Électeur introuvable.');
-        }
-    
-        // Mise à jour des champs corrigés
-        $electeur->numero_carte_electeur = $request->numero_carte_electeur;
-        $electeur->numero_cni = $request->numero_cni;
-        $electeur->nom_famille = $request->nom_famille;
-        $electeur->prenom = $request->prenom;
-        $electeur->date_naissance = $request->date_naissance;
-        $electeur->lieu_naissance = $request->lieu_naissance;
-        $electeur->sexe = $request->sexe;
-        $electeur->bureau_vote = $request->bureau_vote;
-    
-        // Suppression de l'erreur après correction
-        $electeur->save();
-        $electeur->delete(); // Supprime l'entrée des erreurs
-    
-        return back()->with('success', 'Électeur corrigé et ajouté à la base.');
+{
+    $electeur = ElecteursErreurs::find($id);
+
+    if (!$electeur) {
+        return back()->with('error', 'Électeur introuvable.');
     }
-    
+
+    // Insertion de l'électeur corrigé dans la table `electeurs_temp`
+    DB::table('electeurs_temp')->insert([
+        'numero_carte_electeur' => $request->numero_carte_electeur,
+        'numero_cni' => $request->numero_cni,
+        'nom_famille' => $request->nom_famille,
+        'prenom' => $request->prenom,
+        'date_naissance' => $request->date_naissance,
+        'lieu_naissance' => $request->lieu_naissance,
+        'sexe' => $request->sexe,
+        'bureau_vote' => $request->bureau_vote,
+    ]);
+
+    // 📌 Exécuter la procédure stockée pour contrôler l'électeur
+    DB::statement("CALL ControlerElecteurs()");
+
+    // Vérifier si l'électeur a été déplacé dans `electeurs_erreurs`
+    $electeurEnErreur = DB::table('electeurs_erreurs')
+        ->where('numero_carte_electeur', $request->numero_carte_electeur)
+        ->orWhere('numero_cni', $request->numero_cni)
+        ->first();
+
+    if ($electeurEnErreur) {
+        // Si l'électeur est toujours dans `electeurs_erreurs`, afficher un message d'erreur
+        return back()->with('error', "L'électeur contient encore des erreurs et n'a pas été validé.");
+    }
+
+    // Suppression de l'électeur de la table `electeurs_erreurs` après validation
+    $electeur->delete();
+
+    return back()->with('success', 'Électeur corrigé et validé avec succès.');
+}
+
 
 public function supprimerElecteur($id)
 {

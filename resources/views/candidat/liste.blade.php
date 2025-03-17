@@ -1,27 +1,34 @@
 @extends('layouts.candidat')
 
-@section('title', 'Liste des candidats')
-
 @section('content')
-    <h2>Liste des candidats enregistrés</h2>
+<div class="container">
+    <h2>Liste des Candidats</h2>
 
-    <table border="1">
-        <tr>
-            <th>Nom</th>
-            <th>Parti</th>
-            <th>Slogan</th>
-            <th>Actions</th>
-        </tr>
+    @if(session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
 
-        @foreach ($candidats as $candidat)
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Parti Politique</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($candidats as $candidat)
             <tr>
                 <td>{{ $candidat->nom }}</td>
+                <td>{{ $candidat->prenom }}</td>
                 <td>{{ $candidat->parti_politique }}</td>
-                <td>{{ $candidat->slogan }}</td>
                 <td>
-                    <a href="{{ route('candidat.details', $candidat->id) }}">Voir détails</a>
+                <a href="{{ route('candidat.details.code', ['id' => $candidat->id]) }}" class="btn btn-info">👀 Voir Les détails</a>
                 </td>
             </tr>
-        @endforeach
+            @endforeach
+        </tbody>
     </table>
+</div>
 @endsection

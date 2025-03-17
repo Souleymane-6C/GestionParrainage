@@ -1,23 +1,26 @@
 @extends('layouts.electeur')
 
-@section('title', 'Connexion')
-
 @section('content')
-<div class="card">
-    <div class="card-header">Connexion Électeur</div>
-    <div class="card-body">
-        <form action="{{ route('electeur.authenticate') }}" method="POST">
-            @csrf
-            <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" name="email" required>
-            </div>
-            <div class="mb-3">
-                <label for="code" class="form-label">Code d'authentification</label>
-                <input type="text" class="form-control" name="code" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Se connecter</button>
-        </form>
-    </div>
+<div class="container">
+    <h2 class="text-center my-4">🔑 Connexion Électeur</h2>
+
+    @if(session('error'))
+        <div class="alert alert-danger">{{ session('error') }}</div>
+    @endif
+
+    <form action="{{ route('electeur.login') }}" method="POST">
+        @csrf
+        <div class="mb-3">
+            <label for="numero_carte" class="form-label">Numéro de Carte d'Électeur</label>
+            <input type="text" class="form-control" name="numero_carte" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="code_auth" class="form-label">Code d'Authentification</label>
+            <input type="text" class="form-control" name="code_auth" required>
+        </div>
+
+        <button type="submit" class="btn btn-success w-100">✅ Connexion</button>
+    </form>
 </div>
 @endsection

@@ -1,9 +1,16 @@
 @extends('layouts.electeur')
 
-@section('title', 'Tableau de bord')
-
 @section('content')
-<h3>Bienvenue, {{ Auth::guard('electeur')->user()->nom }}</h3>
-<p>Vous pouvez effectuer un parrainage pour un candidat.</p>
-<a href="{{ route('electeur.parrainage') }}" class="btn btn-success">Faire un parrainage</a>
+<div class="container">
+    <h2 class="text-center my-4">🏠 Tableau de Bord</h2>
+
+    <div class="row">
+        <div class="col-md-6 text-center">
+            <a href="{{ route('parrainage.choisir') }}" class="btn btn-primary btn-lg mb-3 w-100">🤝 Parrainer un Candidat</a>
+        </div>
+        <div class="col-md-6 text-center">
+            <a href="{{ route('parrainage.valider') }}" class="btn btn-success btn-lg mb-3 w-100">🔒 Valider Parrainage</a>
+        </div>
+    </div>
+</div>
 @endsection
