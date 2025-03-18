@@ -1,203 +1,174 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Espace Candidat')</title>
-
+    <title>Gestion des Parrainages - Candidat</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* Style de base */
         body {
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 0;
-            background: #f4f7fc;
-            color: #333;
+            background-color: #f8f9fa;
         }
 
-        h1, h2 {
-            font-family: 'Arial', sans-serif;
-            color: #333;
+        .navbar-brand {
+            font-weight: bold;
         }
 
-        header {
-            background-color: #0056b3;
-            color: white;
-            padding: 15px 20px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            transition: background-color 0.3s ease;
-        }
-
-        header:hover {
-            background-color: #00429d;
-        }
-
-        nav ul {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
-        }
-
-        nav ul li a {
-            color: white;
-            text-decoration: none;
-            font-size: 18px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: color 0.3s ease, transform 0.3s ease;
-        }
-
-        nav ul li a:hover {
-            color: #ffb600;
-            transform: translateY(-5px);
-        }
-
-        main {
+        .content {
             padding: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
             animation: fadeIn 1s ease-out;
         }
 
-        footer {
-            background-color: #222;
-            color: #fff;
-            text-align: center;
-            padding: 15px;
-            position: fixed;
-            width: 100%;
-            bottom: 0;
+        .nav-buttons a,
+        .nav-buttons form button {
+            text-decoration: none;
+            padding: 10px 15px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            transition: 0.3s ease-in-out;
         }
 
-        /* Animation de fade-in pour l'apparition de la page */
+        .footer {
+            text-align: center;
+            padding: 10px;
+            background: #e9ecef;
+            border-top: 1px solid #dee2e6;
+            margin-top: 20px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .alert-info {
+            animation: slideIn 1s ease-out;
+        }
+
+        /* Animation pour le drapeau */
+        .flag {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            padding: 10px;
+            background-color: #f8f9fa;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            animation: fadeIn 2s ease-out;
+        }
+
+        .flag img {
+            width: 60px;
+            height: auto;
+            animation: bounce 1.5s infinite;
+        }
+
+        /* Animation: fadeIn */
         @keyframes fadeIn {
             0% {
                 opacity: 0;
             }
+
             100% {
                 opacity: 1;
             }
         }
 
-        /* Style pour les formulaires */
-        form {
-            background-color: #ffffff;
-            padding: 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin-top: 20px;
-            border-radius: 8px;
-            animation: slideIn 0.5s ease-out;
-        }
-
-        form input, form button {
-            display: block;
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
-
-        form input:focus, form button:focus {
-            border-color: #0056b3;
-            outline: none;
-        }
-
-        form button {
-            background-color: #0056b3;
-            color: white;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        form button:hover {
-            background-color: #00429d;
-            transform: translateY(-2px);
-        }
-
-        /* Animation d'apparition pour le formulaire */
+        /* Animation: slideIn */
         @keyframes slideIn {
             0% {
-                transform: translateY(30px);
+                transform: translateY(-50px);
                 opacity: 0;
             }
+
             100% {
                 transform: translateY(0);
                 opacity: 1;
             }
         }
 
-        /* Style des messages d'erreur */
-        .error {
-            color: red;
-            font-size: 14px;
-            margin-top: 10px;
-            animation: fadeInError 1s ease-out;
-        }
-
-        @keyframes fadeInError {
+        /* Animation: fadeInUp */
+        @keyframes fadeInUp {
             0% {
+                transform: translateY(50px);
                 opacity: 0;
             }
+
             100% {
+                transform: translateY(0);
                 opacity: 1;
             }
         }
 
-        /* Animation de bouton hover */
-        button[type="submit"]:hover {
-            background-color: #ffb600;
-            color: white;
-            transform: translateY(-5px);
-        }
-
-        /* Responsiveness */
-        @media (max-width: 768px) {
-            nav ul {
-                flex-direction: column;
-                gap: 15px;
+        /* Animation: bounce */
+        @keyframes bounce {
+            0%,
+            100% {
+                transform: translateY(0);
             }
 
-            header {
-                text-align: center;
-            }
-
-            .main-content {
-                padding: 15px;
-            }
-
-            footer {
-                padding: 10px;
+            50% {
+                transform: translateY(-10px);
             }
         }
+
     </style>
 </head>
+
 <body>
-
-    <header>
-        <h1>Espace Candidat</h1>
-        <nav>
-            <ul>
-                <li><a href="{{ route('candidat.accueil') }}">Accueil</a></li>
-                <!--<li><a href="{{ route('candidat.inscription.form') }}">Inscription</a></li>-->
-                <li><a href="{{ route('candidat.liste') }}">Liste des candidats</a></li>
-                <li><a href="{{ route('candidat.suivi') }}">Suivi des parrainages</a></li>
-            </ul>
+    <div class="container">
+        <!-- Navigation -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="#">Candidat - Parrainages</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    @if(session('candidat_id'))
+                        <li class="nav-item"><a class="nav-link" href="{{ route('candidat.liste') }}"><i class="fa-solid fa-list"></i> Liste des Candidats</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ route('candidat.suivi') }}"><i class="fa-solid fa-chart-line"></i> Suivi Parrainage</a></li>
+                        <li class="nav-item">
+                            <form action="{{ route('candidat.logout') }}" method="POST" class="d-inline">
+                                @csrf
+                                <button type="submit" class="btn btn-danger"><i class="fa-solid fa-sign-out-alt"></i> Déconnexion</button>
+                            </form>
+                        </li>
+                    @endif
+                </ul>
+            </div>
         </nav>
-    </header>
 
-    <main>
-        @yield('content')
-    </main>
+        <!-- Message de Bienvenue -->
+        @if(session('candidat_id'))
+        <div class="alert alert-info mt-3 text-center">
+            👋 Bienvenue, <strong>{{ session('candidat_nom') ?? 'Candidat' }}</strong> !
+        </div>
+        @endif
 
-    <footer>
-        <p>&copy; 2025 - Gestion des Parrainages</p>
-    </footer>
+        <!-- Contenu principal -->
+        <div class="content mt-4">
+            @yield('content')
+        </div>
 
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; {{ date('Y') }} Gestion Parrainage. Tous droits réservés.</p>
+        </footer>
+    </div>
+
+    <!-- Drapeau du Sénégal -->
+    <div class="flag">
+        <img src="https://th.bing.com/th/id/OIP.Vv6OCOFliZsZoO5swrJuNgHaE8?pid=ImgDet&w=178&h=118&c=7&dpr=1,5" alt="Drapeau du Sénégal">
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

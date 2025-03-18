@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.dge')
 
 @section('content')
     <h1>Importer le fichier électoral</h1>

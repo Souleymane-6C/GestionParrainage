@@ -1,16 +1,21 @@
-@extends('layouts.electeur')
-
-@section('title', 'Validation du parrainage')
-
+@extends('layouts.parrain')
 @section('content')
-    <h2>Validation du parrainage</h2>
-    <p>Un code de validation a été envoyé à votre email et votre téléphone.</p>
+<div class="container">
+    <h2 class="text-center my-4">🔒 Validation du Parrainage</h2>
 
-    <form action="{{ route('electeur.validation') }}" method="POST">
+    <form action="{{ route('parrainage.valider') }}" method="POST">
         @csrf
-        <label>Code de validation reçu :</label>
-        <input type="text" name="code_validation" required>
+        <div class="mb-3">
+            <label for="numero_carte" class="form-label">Numéro de Carte d'Électeur</label>
+            <input type="text" class="form-control" name="numero_carte" required>
+        </div>
 
-        <button type="submit">Confirmer</button>
+        <div class="mb-3">
+            <label for="code_validation" class="form-label">Code de Validation</label>
+            <input type="text" class="form-control" name="code_validation" required>
+        </div>
+
+        <button type="submit" class="btn btn-success w-100">✅ Confirmer Parrainage</button>
     </form>
+</div>
 @endsection
