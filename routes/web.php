@@ -11,23 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AuthController;
 
 
-
-// Routes d'inscription
-//Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register.form');
-//Route::post('/register', [AuthController::class, 'register'])->name('register');
-
-// Routes de connexion
-//Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-//Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
-
-// Déconnexion
-//Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
-
-
-
-
-
+//ROUTES DGE    
 Route::get('/accueil', function () {
     return view('dge.accueil');
 })->name('dge.accueil');
@@ -79,6 +63,10 @@ Route::middleware(['auth'])->group(function () {
     });
 });
 
+
+
+//FIN ROUTES DGE
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -88,7 +76,7 @@ Route::get('/', function () {
 
 
 
-
+//ROUTES CANDIDATS
 
 // ✅ Routes pour la gestion des candidats
 
@@ -144,6 +132,15 @@ Route::get('/candidat/verification/{id}', [CandidatController::class, 'verificat
 
 
 
+// ✅ Routes pour le suivi des parrainages
+// Consultation du suivi des parrainages d'un candidat
+Route::get('/suivi-parrainages/{candidat_id}', [CandidatController::class, 'index'])->name('suivi.parrainages');
+
+// Connexion pour accéder au suivi des parrainages
+Route::post('/suivi-parrainages/connexion', [SuiviParrainageController::class, 'connexion'])->name('suivi.connexion');
+
+
+//FIN ROUTES CANDIDATS
 
 
 
@@ -169,41 +166,12 @@ Route::get('/candidat/verification/{id}', [CandidatController::class, 'verificat
 
 
 
-
-
-
-
-
-
-
-// ✅ Routes pour le suivi des parrainages
-// Consultation du suivi des parrainages d'un candidat
-Route::get('/suivi-parrainages/{candidat_id}', [CandidatController::class, 'index'])->name('suivi.parrainages');
-
-// Connexion pour accéder au suivi des parrainages
-Route::post('/suivi-parrainages/connexion', [SuiviParrainageController::class, 'connexion'])->name('suivi.connexion');
-
-
-//ROUTES POUR PROCESSUS PARRAINAGE
-
-
-// Affichage des candidats pour le parrainage
-Route::get('/parrainage', [ParrainageController::class, 'choisirCandidat'])->name('parrainage.choisir');
-
-// Enregistrement du parrainage
-Route::post('/parrainage/enregistrer', [ParrainageController::class, 'enregistrerParrainage'])->name('parrainage.enregistrer');
-
-// Formulaire de validation du parrainage
-Route::get('/parrainage/validation', [ParrainageController::class, 'showValidation'])->name('parrainage.valider');
-
-// Validation du parrainage après réception du code de validation
-Route::post('/parrainage/validation', [ParrainageController::class, 'validerParrainage'])->name('parrainage.validation');
-
-
-
-
-
 // GROUPE DES ROUTES POUR LES ÉLECTEURS
+
+
+Route::post('/electeur/inscription/verifier', [ElecteurController::class, 'verifier'])->name('electeur.inscription.verifier');
+Route::post('/electeur/inscription', [ElecteurController::class, 'register'])->name('electeur.inscription');
+
  Route::prefix('electeur')->name('electeur.')->group(function () {
     // Page d'inscription
     Route::get('/inscription', [ElecteurController::class, 'showRegisterForm'])->name('inscription');
@@ -211,8 +179,12 @@ Route::post('/parrainage/validation', [ParrainageController::class, 'validerParr
     Route::post('/inscription', [ElecteurController::class, 'register'])->name('inscription');
 
     // Page de connexion
-    Route::get('/login', [ElecteurController::class, 'login'])->name('login');
-    Route::post('/authenticate', [ElecteurController::class, 'authenticate'])->name('authenticate');
+   // Route pour afficher le formulaire de connexion (électeur)
+Route::get('/login', [ElecteurController::class, 'showLoginForm'])->name('login.form');
+
+// Route pour traiter la connexion de l'électeur
+Route::post('/login', [ElecteurController::class, 'login'])->name('login');
+
 
     // Routes protégées (nécessitent d'être connecté)
     Route::middleware('auth:electeur')->group(function () {
@@ -251,14 +223,21 @@ Route::middleware(['auth:electeur'])->group(function () {
 
     // Valider un parrainage avec le code reçu
     Route::post('/parrainage/valider', [ParrainageController::class, 'validerParrainage'])->name('parrainage.valider.post');
-
    
 
 });
 
-
-Route::middleware(['auth.electeur'])->group(function () {
-    Route::get('/electeur/dashboard', [ElecteurController::class, 'dashboard'])->name('electeur.dashboard');
-}); 
+//ROUTES POUR PROCESSUS PARRAINAGE
 
 
+// Affichage des candidats pour le parrainage
+Route::get('/parrainage', [ParrainageController::class, 'choisirCandidat'])->name('parrainage.choisir');
+
+// Enregistrement du parrainage
+Route::post('/parrainage/enregistrer', [ParrainageController::class, 'enregistrerParrainage'])->name('parrainage.enregistrer');
+
+// Formulaire de validation du parrainage
+Route::get('/parrainage/validation', [ParrainageController::class, 'showValidation'])->name('parrainage.valider');
+
+// Validation du parrainage après réception du code de validation
+Route::post('/parrainage/validation', [ParrainageController::class, 'validerParrainage'])->name('parrainage.validation');

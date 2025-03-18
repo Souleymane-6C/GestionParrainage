@@ -1,4 +1,4 @@
-@extends('layouts.electeur
+@extends('layouts.parrain')
 @section('content')
 <div class="container">
     <h2 class="text-center my-4">🔒 Validation du Parrainage</h2>

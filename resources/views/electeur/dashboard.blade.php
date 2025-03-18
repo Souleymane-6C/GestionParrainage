@@ -1,4 +1,4 @@
-@extends('layouts.electeur')
+@extends('layouts.parrain')
 
 @section('content')
 <div class="container">
