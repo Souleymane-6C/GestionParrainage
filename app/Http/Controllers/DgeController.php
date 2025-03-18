@@ -194,15 +194,28 @@ public function electeursErreurs()
 
 
 
-
 public function validerElecteurs()
 {
+    // Vérifier si des électeurs sont en attente de validation
     $electeursTemp = DB::table('electeurs_temp')->get();
     $electeursErreurs = DB::table('electeurs_erreurs')->get();
 
-    return view('dge/validation', compact('electeursTemp', 'electeursErreurs'));
+     // Vérifier s'il y a des erreurs dans les électeurs
+     if ($electeursErreurs->isNotEmpty()) {
+        return back()->with('error', 'Il y a des erreurs dans le fichier. Vous devez les corriger avant de valider.');
+    }
 
-    
+    if ($electeursTemp->isEmpty()) {
+        return back()->with('error', 'Aucun électeur à valider.');
+    }
+
+   
+
+    // Appel de la procédure pour valider les électeurs
+    DB::statement("CALL ValiderImportation()");
+
+    // Retourner un message de succès
+    return back()->with('success', 'Tous les électeurs valides ont été transférés.');
 }
 
 

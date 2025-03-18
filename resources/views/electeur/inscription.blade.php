@@ -61,32 +61,37 @@
 </div>
 
 <script>
-   document.getElementById("form-inscription").addEventListener("submit", function (event) {
-    event.preventDefault(); // Empêche le rechargement de la page
+   document.getElementById("btn-verifier").addEventListener("click", function() {
+    let formData = new FormData(document.getElementById("verification-form"));
 
-    let formData = new FormData(this);
-
-    fetch("/electeur/inscription", {
+    fetch("{{ route('electeur.verifier_informations') }}", {
         method: "POST",
         body: formData,
         headers: {
-            "Accept": "application/json",
-            "X-Requested-With": "XMLHttpRequest",
-            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
+            "X-CSRF-TOKEN": document.querySelector('input[name="_token"]').value
         }
     })
-    .then(response => response.json()) // Convertir en JSON
+    .then(response => {
+        console.log("Réponse reçue :", response);
+        return response.json();
+    })
     .then(data => {
-        if (data.error) {
-            alert("Erreur: " + data.error);
+        console.log("Données JSON :", data);
+        if (data.success) {
+            alert("✅ Informations vérifiées avec succès !");
+            document.getElementById("inscription-form").style.display = "block";
+            document.getElementById("hidden_numero_carte_electeur").value = formData.get("numero_carte_electeur");
+            document.getElementById("hidden_numero_cni").value = formData.get("numero_cni");
+            document.getElementById("hidden_nom_famille").value = formData.get("nom_famille");
+            document.getElementById("hidden_bureau_vote").value = formData.get("bureau_vote");
         } else {
-            alert("Succès: " + data.success);
-            window.location.href = data.redirect; // Rediriger vers la page de vérification
+            alert("❌ Erreur : " + data.message);
         }
     })
-    .catch(error => console.error("Erreur dans la requête fetch:", error));
-});
-
+    .catch(error => {
+        console.error("Erreur dans la requête fetch :", error);
+        alert("❌ Une erreur est survenue. Vérifie la console.");
+    });
 });
 
 </script>

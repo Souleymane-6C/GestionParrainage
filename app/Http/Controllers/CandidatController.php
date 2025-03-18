@@ -65,7 +65,7 @@ public function logout(Request $request)
 {
     $request->session()->invalidate();
     $request->session()->regenerateToken();
-    return redirect()->route('candidat.login')->with('success', 'Déconnexion réussie.');
+    return redirect()->route('candidat.accueil')->with('success', 'Déconnexion réussie.');
 }
 
 

@@ -262,8 +262,3 @@ Route::middleware(['auth.electeur'])->group(function () {
 }); 
 
 
-
-//Route::post('/logout', function () {
-    //Auth::logout();
-    //return redirect('/'); // Redirige vers l'accueil après déconnexion
-//})->name('logout');
