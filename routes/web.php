@@ -172,6 +172,8 @@ Route::post('/suivi-parrainages/connexion', [SuiviParrainageController::class, '
 Route::post('/electeur/inscription/verifier', [ElecteurController::class, 'verifier'])->name('electeur.inscription.verifier');
 Route::post('/electeur/inscription', [ElecteurController::class, 'register'])->name('electeur.inscription');
 
+
+
  Route::prefix('electeur')->name('electeur.')->group(function () {
     // Page d'inscription
     Route::get('/inscription', [ElecteurController::class, 'showRegisterForm'])->name('inscription');
@@ -186,8 +188,10 @@ Route::get('/login', [ElecteurController::class, 'showLoginForm'])->name('login.
 Route::post('/login', [ElecteurController::class, 'login'])->name('login');
 
 
+Route::get('/accueil', [ElecteurController::class, 'accueil'])->name('accueil');
+
     // Routes protégées (nécessitent d'être connecté)
-    Route::middleware('auth:electeur')->group(function () {
+   // Route::middleware('auth:electeur')->group(function () {
         // Tableau de bord
         Route::get('/dashboard', [ElecteurController::class, 'dashboard'])->name('dashboard');
 
@@ -207,7 +211,7 @@ Route::post('/login', [ElecteurController::class, 'login'])->name('login');
     
     
     
-    });
+    //});
 });
 Route::get('/suivi-parrainages/{id}', [SuiviParrainageController::class, 'index'])->name('suivi.parrainages');
 
@@ -223,7 +227,7 @@ Route::middleware(['auth:electeur'])->group(function () {
 
     // Valider un parrainage avec le code reçu
     Route::post('/parrainage/valider', [ParrainageController::class, 'validerParrainage'])->name('parrainage.valider.post');
-   
+
 
 });
 

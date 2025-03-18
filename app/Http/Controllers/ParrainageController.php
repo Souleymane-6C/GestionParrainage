@@ -19,7 +19,7 @@ class ParrainageController extends Controller
     public function choisirCandidat()
     {
         $candidats = Candidat::all();
-        return view('parrainage.choisir', compact('candidats'));
+        return view('electeur.parrainage', compact('candidats'));
     }
 
     /**
@@ -83,7 +83,7 @@ class ParrainageController extends Controller
      */
     public function showValidation()
     {
-        return view('parrainage.valider');
+        return view('electeur.validation');
     }
 
     /**

@@ -37,6 +37,11 @@ class ElecteurController extends Controller
         return redirect()->route('electeur.accueil')->with('success', 'Déconnexion réussie.');
     }
     
+    public function accueil()
+    {
+        return view('electeur.accueil');
+    }
+
 
 
 
@@ -193,6 +198,7 @@ class ElecteurController extends Controller
     public function dashboard()
     {
         $electeur = Electeur::findOrFail(session('electeur_id'));
+       
         return view('electeur.dashboard', compact('electeur'));
     }
 
