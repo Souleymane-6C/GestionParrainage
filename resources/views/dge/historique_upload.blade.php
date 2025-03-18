@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.dge')
 
 @section('content')
     <h1>Historique des Uploads</h1>

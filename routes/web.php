@@ -26,6 +26,13 @@ use App\Http\Controllers\AuthController;
 
 
 
+
+
+Route::get('/accueil', function () {
+    return view('dge.accueil');
+})->name('dge.accueil');
+
+
 // Vérifiez si une route `/dge/register` existe
 Route::prefix('dge')->group(function () {
     Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('dge.register.form');
@@ -38,7 +45,6 @@ Route::post('/login', [AuthController::class, 'login'])->name('user.login');
 
 // Déconnexion des utilisateurs
 Route::post('/logout', [AuthController::class, 'logout'])->name('user.logout');
-
 
 
 
@@ -257,7 +263,7 @@ Route::middleware(['auth.electeur'])->group(function () {
 
 
 
-Route::post('/logout', function () {
-    Auth::logout();
-    return redirect('/'); // Redirige vers l'accueil après déconnexion
-})->name('logout');
+//Route::post('/logout', function () {
+    //Auth::logout();
+    //return redirect('/'); // Redirige vers l'accueil après déconnexion
+//})->name('logout');

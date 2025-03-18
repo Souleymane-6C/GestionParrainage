@@ -70,6 +70,9 @@ public function statistiques()
     return view('dge.statistiques', compact('candidats'));
 }
 
+
+
+
 public function electeursErreurs()
 {
     // Récupérer uniquement les électeurs en erreur
@@ -147,13 +150,14 @@ public function electeursErreurs()
     
         while ($row = fgetcsv($file)) {
             $electeursValidés[] = [
-                'numero_carte_electeur' => $row[0] ?? null,
-                'numero_cni' => $row[1] ?? null,
-                'nom_famille' => $row[2] ?? null,
-                'prenom' => $row[3] ?? null,
-                'date_naissance' => $row[4] ?? null,
-                'lieu_naissance' => $row[5] ?? null,
-                'sexe' => $row[6] ?? null,
+                'numero_carte_electeur' => $row[0] ?? null,        // Colonne 1 : numéro carte électeur
+                'numero_cni' => $row[1] ?? null,                  // Colonne 2 : numéro CNI
+                'nom_famille' => $row[2] ?? null,                 // Colonne 3 : nom famille
+                'prenom' => $row[3] ?? null,                      // Colonne 4 : prénom
+                'bureau_vote' => $row[4] ?? null,                 // Colonne 5 : bureau de vote
+                'date_naissance' => $row[5] ?? null,              // Colonne 6 : date de naissance
+                'lieu_naissance' => $row[6] ?? null,              // Colonne 7 : lieu de naissance
+                'sexe' => $row[7] ?? null,                        // Colonne 8 : sexe
             ];
         }
         fclose($file);
@@ -186,8 +190,25 @@ public function electeursErreurs()
         ->with('success', 'La période de parrainage a été ' . ($periode->etat ? 'ouverte' : 'fermée') . ' avec succès.');
 }
 
+
+
+
+
+
+public function validerElecteurs()
+{
+    $electeursTemp = DB::table('electeurs_temp')->get();
+    $electeursErreurs = DB::table('electeurs_erreurs')->get();
+
+    return view('dge/validation', compact('electeursTemp', 'electeursErreurs'));
+
+    
+}
+
+
+
     // 📌 Finalisation de l'importation des électeurs
-    public function validerElecteurs()
+   /* public function validerElecteurs()
     {
         $electeursTemp = DB::table('electeurs_temp')->get();
         if ($electeursTemp->isEmpty()) {
@@ -204,7 +225,7 @@ public function electeursErreurs()
         DB::statement("CALL ValiderImportation()");
     
         return back()->with('success', 'Tous les électeurs valides ont été transférés.');
-    }
+    }*/
     
 
 
@@ -222,11 +243,18 @@ public function electeursErreurs()
         'numero_cni' => $request->numero_cni,
         'nom_famille' => $request->nom_famille,
         'prenom' => $request->prenom,
+        'bureau_vote' => $request->bureau_vote,
         'date_naissance' => $request->date_naissance,
         'lieu_naissance' => $request->lieu_naissance,
         'sexe' => $request->sexe,
-        'bureau_vote' => $request->bureau_vote,
+        
     ]);
+    // Supprimer les anciennes erreurs pour l'électeur avant de le traiter
+DB::table('electeurs_erreurs')
+->where('numero_carte_electeur', $request->numero_carte_electeur)
+->orWhere('numero_cni', $request->numero_cni)
+->delete();
+
 
     // 📌 Exécuter la procédure stockée pour contrôler l'électeur
     DB::statement("CALL ControlerElecteurs()");

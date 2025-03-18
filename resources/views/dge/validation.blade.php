@@ -1,12 +1,16 @@
-@extends('layouts.app')
+@extends('layouts.dge')
 
 @section('content')
     <h1>Validation des Électeurs</h1>
 
-    @if($electeursTemp->isEmpty())
-        <p>Aucun électeur en attente de validation.</p>
-    @else
-        <form action="{{ route('dge.valider') }}" method="POST">
+    @if($electeursErreurs->isEmpty() && $electeursTemp->isNotEmpty())
+        <!-- Affichage du message lorsque les électeurs n'ont aucune erreur -->
+        <div class="alert alert-success text-center">
+            <strong>Il n'y a pas d'électeurs à problèmes et le fichier est validable !</strong>
+        </div>
+
+        <!-- Formulaire pour valider les électeurs -->
+        <form action="{{ route('dge.validerElecteurs') }}" method="POST">
             @csrf
             <table class="table">
                 <thead>
@@ -36,5 +40,15 @@
             </table>
             <button type="submit" class="btn btn-success">Valider Tous</button>
         </form>
+    @elseif($electeursErreurs->isEmpty())
+        <!-- Affichage lorsque la table electeurs_temp est vide -->
+        <div class="alert alert-info text-center">
+            Aucun électeur en attente de validation.
+        </div>
+    @else
+        <!-- Affichage lorsque des erreurs existent dans la table electeurs_erreurs -->
+        <div class="alert alert-danger text-center">
+            <strong>Il y a des erreurs dans le fichier ! Vous devez les corriger avant de valider.</strong>
+        </div>
     @endif
 @endsection
