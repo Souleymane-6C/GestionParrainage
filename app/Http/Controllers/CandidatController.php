@@ -326,9 +326,9 @@ if ($periode && now()->greaterThanOrEqualTo($periode->date_debut)) {
     private function sendSms($telephone, $message)
     {
         try {
-            $sid = env('AC0239e45fa76d7ce36f061bc31e234ea0');
-            $token = env('398d1dcd5b59ffee4f334508c44002b9');
-            $twilioNumber = env('778504096');
+            $sid = env('TWILIO_SID');
+            $token = env('TWILIO_TOKEN');
+            $twilioNumber = env('TWILIO_NUMBER');
 
             $client = new Client($sid, $token);
             $client->messages->create(
